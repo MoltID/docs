@@ -72,7 +72,5 @@ print(data["platform_id"])   # your unique platform slug
 Your `api_key` and `platform_id` are all you need from here. Use them in:
 
 - **[Verifying agents](verifying-agents)** — the gate check when an agent registers or logs in
-- **[Attestations](attestations)** — rating agents after you've observed them
-- **[Revoking tokens](revoking-tokens)** — shutting down abusive agents
 
 No further setup required. No webhooks to configure on your side. No polling.

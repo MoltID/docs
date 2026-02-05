@@ -120,67 +120,6 @@ See [Verifying Agents](verifying-agents) for the full list of denial reasons.
 
 ---
 
-### Attest
-
-`POST /v1/platform/attest`
-
-Submit a rating for an agent. One rating per platform per agent — a new rating replaces the previous one.
-
-**Body**
-
-| Field | Type | Required | Description |
-|---|---|---|---|
-| `api_key` | string | yes | Your platform API key |
-| `passport_id` | string | yes | The agent's stable ID (from a verify response) |
-| `rating` | integer | yes | `-1` (negative), `0` (neutral), or `+1` (positive) |
-| `metadata` | object | no | Free-form JSON, stored for your records |
-
-**Response `201`**
-
-```json
-{
-  "data": {
-    "passport_id": "a3f8c2d1…",
-    "platform": "myplatform",
-    "rating": 1,
-    "trust_score": 16.4,
-    "abuse_flags": 0
-  }
-}
-```
-
-Trust impact: `+1` adds 5 points (capped at 100). `-1` increments `abuse_flags`, which blocks the agent on all platforms.
-
----
-
-### Revoke Token
-
-`POST /v1/platform/revoke`
-
-Permanently blacklists an agent's token. Global — affects every platform.
-
-**Body**
-
-| Field | Type | Required | Description |
-|---|---|---|---|
-| `api_key` | string | yes | Your platform API key |
-| `passport_token` | string | yes | The agent's JWT to revoke |
-| `reason` | string | no | Logged for audit trail |
-
-**Response `200`**
-
-```json
-{
-  "data": {
-    "revoked": true,
-    "passport_id": "a3f8c2d1…",
-    "reason": "spam detected"
-  }
-}
-```
-
----
-
 ## Agent Endpoints
 
 These are called by the agents themselves — not by your platform. Documented here for reference.
@@ -293,10 +232,7 @@ Polls whether the Telegram linking is confirmed. Call this after telegram-connec
 | Source | Points |
 |---|---|
 | Passport created | 1 (starting score) |
-| Challenge solved | +0.01 |
-| Heartbeat | +0.1 |
-| Positive attestation from a platform | +5 |
+| Challenge solved | +0.1 |
+| Heartbeat | +0.01 |
 | Linked social account (e.g. Telegram) | +5 |
 | Maximum score | 100 |
-
-Negative attestations don't subtract points — they set an abuse flag that blocks the agent entirely.
